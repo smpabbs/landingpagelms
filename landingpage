@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Siswa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #05070f;
+      --card: #0d1120;
+      --border: rgba(255,255,255,0.06);
+      --border-h: rgba(255,255,255,0.13);
+      --text: #eef2ff;
+      --muted: #7b8bbf;
+      --lms: #22d3ee;
+      --form: #a78bfa;
+      --flip: #4ade80;
+      --tka: #f97316;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── SHARED BG ── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .bg-layer::before {
+      content: '';
+      position: absolute;
+      width: 900px; height: 900px;
+      top: -350px; left: -200px;
+      background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 65%);
+      animation: float1 16s ease-in-out infinite alternate;
+    }
+    .bg-layer::after {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      bottom: -200px; right: -100px;
+      background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 65%);
+      animation: float2 20s ease-in-out infinite alternate;
+    }
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 10%, transparent 100%);
+    }
+    @keyframes float1 { to { transform: translate(50px, 40px); } }
+    @keyframes float2 { to { transform: translate(-40px, -50px); } }
+
+    /* ── PAGE SYSTEM ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── WRAP ── */
+    .wrap {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 28px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 24px;
+    }
+    .logo { display: flex; align-items: center; gap: 13px; }
+    .logo-box {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(34,211,238,0.2), rgba(167,139,250,0.2));
+      border: 1px solid rgba(34,211,238,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .logo-name { font-size: 1rem; font-weight: 700; }
+    .logo-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted); margin-top: 1px;
+    }
+    .pill-online {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.2);
+      padding: 7px 16px; border-radius: 100px;
+      font-size: 0.74rem; font-weight: 500; color: #4ade80;
+    }
+    .blink {
+      width: 7px; height: 7px; background: #4ade80;
+      border-radius: 50%; box-shadow: 0 0 8px #4ade80;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; box-shadow:0 0 8px #4ade80; }
+      50%      { opacity:.4; box-shadow:0 0 3px #4ade80; }
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: 16px; margin-top: 48px; margin-bottom: 80px;
+    }
+    @media(max-width:620px){ .cards{ grid-template-columns:1fr; } }
+
+    .card {
+      --ac: var(--lms);
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px; padding: 30px 26px;
+      text-decoration: none; color: var(--text);
+      display: flex; flex-direction: column;
+      overflow: hidden; cursor: pointer;
+      transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s;
+      opacity: 0; animation: rise .7s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .card:nth-child(1){ --ac:var(--lms);  animation-delay:.45s; }
+    .card:nth-child(2){ --ac:var(--form); animation-delay:.55s; }
+    .card:nth-child(3){ --ac:var(--flip); animation-delay:.65s; }
+    .card:nth-child(4){ --ac:var(--tka);  animation-delay:.75s; }
+
+    .card::after {
+      content: '';
+      position: absolute; width: 220px; height: 220px;
+      top: -70px; right: -50px;
+      background: radial-gradient(circle, var(--ac) 0%, transparent 70%);
+      opacity: .05; pointer-events: none;
+      transition: opacity .3s; border-radius: 50%;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ac), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover { transform: translateY(-7px); border-color: var(--border-h); box-shadow: 0 28px 56px rgba(0,0,0,.45); }
+    .card:hover::before { opacity: .75; }
+    .card:hover::after { opacity: .11; }
+    .card:hover .icon-wrap { transform: scale(1.1) rotate(-5deg); background: rgba(255,255,255,.08); }
+    .card:hover .card-cta { gap: 12px; }
+    .card:hover .arr { background: var(--ac); color: #000; transform: rotate(-45deg); }
+
+    .card-disabled {
+      opacity: 0.6; filter: saturate(0.35); cursor: default;
+    }
+    .card-disabled:hover {
+      transform: none !important; border-color: var(--border) !important;
+      box-shadow: none !important;
+    }
+    .card-disabled:hover::before { opacity: 0 !important; }
+    .card-disabled:hover::after  { opacity: .05 !important; }
+    .card-disabled:hover .icon-wrap { transform: none !important; background: rgba(255,255,255,.04) !important; }
+    .card-disabled:hover .arr { background: rgba(255,255,255,.03) !important; color: var(--muted) !important; transform: none !important; }
+
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 22px;
+    }
+    .icon-wrap {
+      width: 54px; height: 54px; border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      transition: transform .3s cubic-bezier(.22,1,.36,1), background .3s;
+    }
+    .card-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .63rem; letter-spacing: .06em; color: var(--ac);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      padding: 5px 10px; border-radius: 8px;
+    }
+    .card-cat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ac); margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 1.2rem; font-weight: 700;
+      letter-spacing: -.025em; line-height: 1.25; margin-bottom: 12px;
+    }
+    .card-desc {
+      font-size: .83rem; color: var(--muted); line-height: 1.65;
+      flex: 1; margin-bottom: 22px;
+    }
+    .card-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 18px; border-top: 1px solid var(--border);
+    }
+    .card-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .82rem; font-weight: 600; color: var(--ac);
+      transition: gap .2s;
+    }
+    .arr {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem;
+      transition: background .25s, transform .25s, color .25s;
+    }
+    .coming-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .76rem; font-weight: 600; color: var(--muted);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 5px 14px; border-radius: 100px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 26px 0;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative; z-index: 1;
+    }
+    .f-copy { font-size: .73rem; color: var(--muted); }
+    .f-links { display: flex; gap: 20px; }
+    .f-links a { font-size: .73rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .f-links a:hover { color: var(--text); }
+
+    /* ── COMING SOON PAGE ── */
+    #page-coming {
+      min-height: 100vh;
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 40px 24px;
+    }
+    #page-coming.active { display: flex; }
+
+    .cs-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .cs-glow::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(167,139,250,0.13) 0%, transparent 65%);
+      animation: pulse-glow 4s ease-in-out infinite alternate;
+    }
+    @keyframes pulse-glow {
+      from { transform: translate(-50%,-50%) scale(1); }
+      to   { transform: translate(-50%,-50%) scale(1.18); }
+    }
+
+    .cs-content { position: relative; z-index: 1; max-width: 500px; }
+
+    .cs-icon {
+      font-size: 72px; display: block; margin-bottom: 28px;
+      animation: bob 3s ease-in-out infinite alternate;
+    }
+    @keyframes bob { to { transform: translateY(-10px); } }
+
+    .cs-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(167,139,250,.1);
+      border: 1px solid rgba(167,139,250,.28);
+      color: #a78bfa; padding: 6px 18px; border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .67rem; letter-spacing: .14em; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .cs-title {
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      font-weight: 800; letter-spacing: -.04em; line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .cs-title .hi {
+      background: linear-gradient(100deg, #a78bfa, #22d3ee);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .cs-desc {
+      font-size: .96rem; color: var(--muted);
+      line-height: 1.75; margin-bottom: 40px;
+    }
+
+    .cs-back {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(167,139,250,.1);
+      border: 1px solid rgba(167,139,250,.25);
+      color: #a78bfa; padding: 13px 28px; border-radius: 14px;
+      font-size: .88rem; font-weight: 600;
+      text-decoration: none; cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .cs-back:hover { background: rgba(167,139,248,.2); transform: translateY(-2px); }
+
+    @keyframes rise {
+      from { opacity:0; transform:translateY(28px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="grid-bg"></div>
+
+<!-- ══ PAGE: MAIN ══ -->
+<div id="page-main" class="page active">
+  <div class="wrap">
+    <nav>
+      <div class="logo">
+        <div class="logo-box">🎓</div>
+        <div>
+          <div class="logo-name">Portal Siswa</div>
+          <div class="logo-sub">Learning Hub</div>
+        </div>
+      </div>
+      <div class="pill-online"><div class="blink"></div>Semua platform aktif</div>
+    </nav>
+
+    <div class="cards">
+
+      <!-- LMS -->
+      <a href="https://lms.alabidin.id/" class="card">
+        <div class="card-head">
+          <div class="icon-wrap">📚</div>
+          <span class="card-num">01</span>
+        </div>
+
+        <div class="card-title">LMS ABBS Junior High School</div>
+        <div class="card-foot">
+          <span class="card-cta">Open</span>
+          <div class="arr">↗</div>
+        </div>
+      </a>
+
+      <!-- Google Form → live link -->
+      <a href="https://bit.ly/sts2bindo7xz" class="card" style="--ac:var(--form);">
+        <div class="card-head">
+          <div class="icon-wrap">📝</div>
+          <span class="card-num">02</span>
+        </div>
+
+        <div class="card-title">Google Form</div>
+        <div class="card-foot">
+          <span class="card-cta">Buka Form →</span>
+          <div class="arr">↗</div>
+        </div>
+      </a>
+
+      <!-- FlipQ's — menyusul -->
+      <div class="card card-disabled" style="--ac:var(--flip);">
+        <div class="card-head">
+          <div class="icon-wrap">🧩</div>
+          <span class="card-num">03</span>
+        </div>
+        <div class="card-title">Exam FliQ's</div>
+        
+        <div class="card-foot">
+          <span class="coming-badge">🔗 Coming Soon</span>
+          <div class="arr" style="color:var(--muted);">—</div>
+        </div>
+      </div>
+
+      <!-- TKA -->
+      <a href="https://tka.edubrand.id/login" class="card" style="--ac:var(--tka);">
+        <div class="card-head">
+          <div class="icon-wrap">🏆</div>
+          <span class="card-num">04</span>
+        </div>
+      
+        <div class="card-title">Try Out TKA</div>
+       
+        <div class="card-foot">
+          <span class="card-cta">Open</span>
+          <div class="arr">↗</div>
+        </div>
+      </a>
+
+    </div>
+
+    <footer>
+      <span class="f-copy">© 2025 Portal Siswa · Learning Hub</span>
+      <div class="f-links">
+        <a href="#">Bantuan</a>
+        <a href="#">Kontak</a>
+        <a href="#">Kebijakan</a>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ══ PAGE: COMING SOON ══ -->
+<div id="page-coming">
+  <div class="cs-glow"></div>
+  <div class="grid-bg"></div>
+  <div class="cs-content">
+    <span class="cs-icon">📝</span>
+    <div class="cs-chip">✦ Google Form</div>
+    <h1 class="cs-title">Segera Hadir<br/><span class="hi">Coming Soon</span></h1>
+    <p class="cs-desc">
+      Halaman Google Form sedang dalam persiapan.<br/>
+      Pantau terus portal kami untuk pembaruan selanjutnya.
+    </p>
+    <button class="cs-back" onclick="backToMain()">← Kembali ke Portal</button>
+  </div>
+</div>
+
+<script>
+  function showComingSoon() {
+    document.getElementById('page-main').classList.remove('active');
+    document.getElementById('page-coming').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function backToMain() {
+    document.getElementById('page-coming').classList.remove('active');
+    document.getElementById('page-main').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
