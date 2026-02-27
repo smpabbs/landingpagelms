@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LMS — ABBS JHS</title>
+  <title>Portal Siswa — ABBS JHS</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -101,7 +101,7 @@
       50%      { opacity:.4; box-shadow:0 0 3px #4ade80; }
     }
 
-    /* ── CARDS ── */
+    /* ── MAIN CARDS ── */
     .cards {
       display: grid; grid-template-columns: repeat(2,1fr);
       gap: 16px; margin-top: 48px; margin-bottom: 80px;
@@ -140,19 +140,7 @@
     .card:hover .card-cta { gap: 12px; }
     .card:hover .arr { background: var(--ac); color: #000; transform: rotate(-45deg); }
 
-    .card-disabled {
-      opacity: 0.6; filter: saturate(0.35); cursor: default;
-    }
-    .card-disabled:hover { transform: none !important; border-color: var(--border) !important; box-shadow: none !important; }
-    .card-disabled:hover::before { opacity: 0 !important; }
-    .card-disabled:hover::after  { opacity: .05 !important; }
-    .card-disabled:hover .icon-wrap { transform: none !important; background: rgba(255,255,255,.04) !important; }
-    .card-disabled:hover .arr { background: rgba(255,255,255,.03) !important; color: var(--muted) !important; transform: none !important; }
-
-    .card-head {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 22px;
-    }
+    .card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
     .icon-wrap {
       width: 54px; height: 54px; border-radius: 16px;
       background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
@@ -165,19 +153,9 @@
       background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
       padding: 5px 10px; border-radius: 8px;
     }
-    .card-title {
-      font-size: 1.15rem; font-weight: 700;
-      letter-spacing: -.025em; line-height: 1.3;
-      margin-bottom: 0; flex: 1;
-    }
-    .card-foot {
-      display: flex; align-items: center; justify-content: space-between;
-      padding-top: 18px; border-top: 1px solid var(--border); margin-top: 20px;
-    }
-    .card-cta {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: .82rem; font-weight: 600; color: var(--ac); transition: gap .2s;
-    }
+    .card-title { font-size: 1.15rem; font-weight: 700; letter-spacing: -.025em; line-height: 1.3; margin-bottom: 0; flex: 1; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 18px; border-top: 1px solid var(--border); margin-top: 20px; }
+    .card-cta { display: inline-flex; align-items: center; gap: 8px; font-size: .82rem; font-weight: 600; color: var(--ac); transition: gap .2s; }
     .arr {
       width: 30px; height: 30px; border-radius: 8px;
       background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
@@ -192,10 +170,7 @@
     }
 
     /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border); padding: 26px 0;
-      position: relative; z-index: 1;
-    }
+    footer { border-top: 1px solid var(--border); padding: 26px 0; position: relative; z-index: 1; }
     .f-copy { font-size: .73rem; color: var(--muted); }
 
     /* ── SUB-PAGES SHARED ── */
@@ -209,6 +184,7 @@
       opacity: 0; animation: rise .5s .1s cubic-bezier(.22,1,.36,1) forwards;
     }
     .sub-breadcrumb span { color: var(--form); }
+    .sub-breadcrumb span.flip-accent { color: var(--flip); }
     .crumb-btn {
       cursor: pointer; background: none; border: none;
       font-family: 'JetBrains Mono', monospace;
@@ -231,11 +207,16 @@
     }
     .chip-form { background: rgba(167,139,250,.1); border: 1px solid rgba(167,139,250,.28); color: #a78bfa; }
     .chip-male { background: rgba(96,165,250,.1);  border: 1px solid rgba(96,165,250,.28);  color: #60a5fa; }
+    .chip-flip { background: rgba(74,222,128,.1);  border: 1px solid rgba(74,222,128,.28);  color: #4ade80; }
 
     .sub-title {
       font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 800;
       letter-spacing: -.04em; line-height: 1.1; margin-bottom: 40px;
       opacity: 0; animation: rise .5s .25s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .sub-desc {
+      font-size: .95rem; color: var(--muted); line-height: 1.7; margin-bottom: 36px;
+      opacity: 0; animation: rise .5s .3s cubic-bezier(.22,1,.36,1) forwards;
     }
 
     /* ── GENDER CARDS ── */
@@ -271,16 +252,16 @@
     .gender-card:hover .g-icon { transform: scale(1.12); }
     .gender-card.male { --gc: var(--male); }
 
-    .g-icon   { font-size: 48px; transition: transform .3s cubic-bezier(.22,1,.36,1); }
-    .g-label  { font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; }
-    .g-badge  {
+    .g-icon  { font-size: 48px; transition: transform .3s cubic-bezier(.22,1,.36,1); }
+    .g-label { font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; }
+    .g-badge {
       font-family: 'JetBrains Mono', monospace;
       font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
       color: var(--gc); background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.07); padding: 4px 12px; border-radius: 8px;
     }
 
-    /* ── LEVEL CARDS (active) ── */
+    /* ── LEVEL CARDS ── */
     .level-grid {
       display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
       opacity: 0; animation: rise .5s .35s cubic-bezier(.22,1,.36,1) forwards;
@@ -293,8 +274,7 @@
       background: var(--card); border: 1px solid var(--border);
       border-radius: 24px; padding: 34px 20px;
       text-decoration: none; color: var(--text);
-      text-align: center;
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;
       cursor: pointer;
       transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s;
     }
@@ -314,14 +294,42 @@
     .level-card:hover::after  { opacity: .13; }
     .level-card:hover .lv-open { background: var(--lc); color: #000; }
 
+    /* disabled level */
+    .level-card.disabled {
+      opacity: .5; filter: saturate(.3); cursor: default; pointer-events: none;
+    }
+
     .lv-num  { font-size: 2.4rem; font-weight: 800; letter-spacing: -.04em; color: var(--lc); }
     .lv-word { font-size: .7rem; font-family: 'JetBrains Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
     .lv-open {
-      font-size: .72rem; font-weight: 600;
-      color: var(--lc);
+      font-size: .72rem; font-weight: 600; color: var(--lc);
       background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
       padding: 5px 16px; border-radius: 100px; margin-top: 6px;
       transition: background .25s, color .25s;
+    }
+    .lv-soon {
+      font-size: .72rem; font-weight: 600; color: var(--muted);
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      padding: 5px 16px; border-radius: 100px; margin-top: 6px;
+    }
+
+    /* ── SORRY PAGE ── */
+    .sorry-icon {
+      font-size: 72px; display: block; margin-bottom: 24px;
+      opacity: 0; animation: rise .5s .1s cubic-bezier(.22,1,.36,1) forwards, bob 3s 1s ease-in-out infinite alternate;
+    }
+    .sorry-title {
+      font-size: clamp(1.6rem, 5vw, 2.6rem); font-weight: 800;
+      letter-spacing: -.04em; line-height: 1.15; margin-bottom: 14px;
+      opacity: 0; animation: rise .5s .2s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .sorry-title .hi {
+      background: linear-gradient(100deg, #a78bfa, #f472b6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sorry-desc {
+      font-size: .96rem; color: var(--muted); line-height: 1.75; margin-bottom: 36px;
+      opacity: 0; animation: rise .5s .3s cubic-bezier(.22,1,.36,1) forwards;
     }
 
     /* ── BACK BTN ── */
@@ -334,6 +342,22 @@
       opacity: 0; animation: rise .5s .5s cubic-bezier(.22,1,.36,1) forwards;
     }
     .back-btn:hover { background: rgba(255,255,255,.09); color: var(--text); transform: translateY(-2px); }
+
+    /* ── GLOW for sorry page ── */
+    .sorry-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .sorry-glow::before {
+      content: ''; position: absolute;
+      width: 700px; height: 700px; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(167,139,250,0.1) 0%, transparent 65%);
+      animation: pulse-glow 4s ease-in-out infinite alternate;
+    }
+    @keyframes pulse-glow {
+      from { transform: translate(-50%,-50%) scale(1); }
+      to   { transform: translate(-50%,-50%) scale(1.18); }
+    }
 
     /* ── ANIMATIONS ── */
     @keyframes rise { from { opacity:0; transform:translateY(26px); } to { opacity:1; transform:translateY(0); } }
@@ -356,13 +380,15 @@
       <div class="logo">
         <div class="logo-box">🎓</div>
         <div>
-          <div class="logo-name">LMS</div>
+          <div class="logo-name">Portal Siswa</div>
           <div class="logo-sub">ABBS Junior High School</div>
         </div>
       </div>
+      <div class="pill-online"><div class="blink"></div>Semua platform aktif</div>
     </nav>
 
     <div class="cards">
+      <!-- LMS -->
       <a href="https://lms.alabidin.id/" class="card">
         <div class="card-head">
           <div class="icon-wrap">📚</div>
@@ -375,7 +401,8 @@
         </div>
       </a>
 
-      <div class="card" onclick="go('page-gender')" style="--ac:var(--form);">
+      <!-- Google Form → Level page -->
+      <div class="card" onclick="go('page-form-level')" style="--ac:var(--form);">
         <div class="card-head">
           <div class="icon-wrap">📝</div>
           <span class="card-num">02</span>
@@ -387,18 +414,20 @@
         </div>
       </div>
 
-      <div class="card card-disabled" style="--ac:var(--flip);">
+      <!-- Exam FlipQ's → Level page -->
+      <div class="card" onclick="go('page-flip-level')" style="--ac:var(--flip);">
         <div class="card-head">
           <div class="icon-wrap">🧩</div>
           <span class="card-num">03</span>
         </div>
         <div class="card-title">Exam Fliq's</div>
         <div class="card-foot">
-          <span class="coming-badge">🔗 Coming Soon</span>
-          <div class="arr" style="color:var(--muted);">—</div>
+          <span class="card-cta">Open →</span>
+          <div class="arr">↗</div>
         </div>
       </div>
 
+      <!-- TKA -->
       <a href="https://tka.edubrand.id/login" class="card" style="--ac:var(--tka);">
         <div class="card-head">
           <div class="icon-wrap">🏆</div>
@@ -412,14 +441,14 @@
       </a>
     </div>
 
-    <footer style="text-align: center;">
+    <footer>
       <span class="f-copy">© 2025 LMS · ABBS JHS</span>
     </footer>
   </div>
 </div>
 
-<!-- ════════════ PAGE 2 — GENDER ════════════ -->
-<div id="page-gender" class="page-center">
+<!-- ════════════ PAGE 2 — LEVEL GOOGLE FORM ════════════ -->
+<div id="page-form-level" class="page-center">
   <div class="sub-wrap">
     <div class="sub-breadcrumb">
       <button class="crumb-btn" onclick="go('page-main')">Portal</button>
@@ -428,100 +457,89 @@
     </div>
     <span class="sub-icon">📝</span>
     <div class="sub-chip chip-form">✦ Google Form</div>
-    <h1 class="sub-title">Choose Your Gender</h1>
-    <div class="gender-grid">
-      <div class="gender-card" onclick="go('page-level-female')">
-        <div class="g-icon">🧕</div>
-        <div class="g-label">Female</div>
-        <div class="g-badge">Pilih →</div>
+    <h1 class="sub-title">Choose your level</h1>
+    <div class="level-grid">
+      <div class="level-card" onclick="go('page-sorry')" style="--lc:#a78bfa;">
+        <div class="lv-num">7</div>
+        <div class="lv-word">Level</div>
+        <div class="lv-open">Open →</div>
       </div>
-      <div class="gender-card male" onclick="go('page-level-male')">
-        <div class="g-icon">🧑</div>
-        <div class="g-label">Male</div>
-        <div class="g-badge">Pilih →</div>
+      <div class="level-card" onclick="go('page-sorry')" style="--lc:#c084fc;">
+        <div class="lv-num">8</div>
+        <div class="lv-word">Level</div>
+        <div class="lv-open">Open →</div>
+      </div>
+      <div class="level-card" onclick="go('page-sorry')" style="--lc:#e879f9;">
+        <div class="lv-num">9</div>
+        <div class="lv-word">Level</div>
+        <div class="lv-open">Open →</div>
       </div>
     </div>
     <button class="back-btn" onclick="go('page-main')">← Kembali ke Portal</button>
   </div>
 </div>
 
-<!-- ════════════ PAGE 3a — LEVEL FEMALE ════════════ -->
-<div id="page-level-female" class="page-center">
+<!-- ════════════ PAGE 4 — SORRY (Google Form) ════════════ -->
+<div id="page-sorry" class="page-center">
+  <div class="sorry-glow"></div>
   <div class="sub-wrap">
     <div class="sub-breadcrumb">
       <button class="crumb-btn" onclick="go('page-main')">Portal</button>
       <span>›</span>
-      <button class="crumb-btn" onclick="go('page-gender')">Google Form</button>
-      <span>›</span>
-      <span>Female</span>
+      <span>Google Form</span>
     </div>
-    <span class="sub-icon">🧕</span>
-    <div class="sub-chip chip-form">✦ Female</div>
-    <h1 class="sub-title">Choose Your Level</h1>
-    <div class="level-grid">
-      <a class="level-card" href="https://docs.google.com/forms/d/e/1FAIpQLSeWknXF9rEO4lvECqOJXn4V1J4N4TgrD8Vj1O1KUPu6X7V8SA/viewform?usp=header" style="--lc:#a78bfa;">
-        <div class="lv-num">7</div>
-        <div class="lv-word">Level</div>
-        <div class="lv-open">Open →</div>
-      </a>
-      <a class="level-card" href="https://docs.google.com/forms/d/e/1FAIpQLSelwplm6ZUgffDsJY_impB4w_Z9z6sV3rWu1hDlncnzYeUznw/viewform?usp=header" style="--lc:#c084fc;">
-        <div class="lv-num">8</div>
-        <div class="lv-word">Level</div>
-        <div class="lv-open">Open →</div>
-      </a>
-      <a class="level-card" href="https://docs.google.com/forms/d/e/1FAIpQLSdWEAjuUU0aa088Sx3kZ7tqz7phhQ1y1Jx3qZccLnqFjBiyFQ/viewform?usp=header" style="--lc:#e879f9;">
-        <div class="lv-num">9</div>
-        <div class="lv-word">Level</div>
-        <div class="lv-open">Open →</div>
-      </a>
-    </div>
-    <button class="back-btn" onclick="go('page-gender')">← Kembali ke Pilih Gender</button>
+    <span class="sorry-icon">🙏</span>
+    <div class="sub-chip chip-form" style="opacity:0;animation:rise .5s .15s cubic-bezier(.22,1,.36,1) forwards;">✦ Google Form</div>
+    <h1 class="sorry-title">Maaf,<br/><span class="hi">hari ini tidak menggunakan<br/>Google Form</span></h1>
+    <p class="sorry-desc">Silakan gunakan menu lain atau hubungi guru untuk informasi lebih lanjut.</p>
+    <button class="back-btn" onclick="go('page-main')">← Kembali ke Portal</button>
   </div>
 </div>
 
-<!-- ════════════ PAGE 3b — LEVEL MALE ════════════ -->
-<div id="page-level-male" class="page-center">
+<!-- ════════════ PAGE 5 — EXAM FLIP LEVEL ════════════ -->
+<div id="page-flip-level" class="page-center">
   <div class="sub-wrap">
     <div class="sub-breadcrumb">
       <button class="crumb-btn" onclick="go('page-main')">Portal</button>
       <span>›</span>
-      <button class="crumb-btn" onclick="go('page-gender')">Google Form</button>
-      <span>›</span>
-      <span>Male</span>
+      <span class="flip-accent">Exam Fliq's</span>
     </div>
-    <span class="sub-icon">🧑</span>
-    <div class="sub-chip chip-male">✦ Male</div>
+    <span class="sub-icon">🧩</span>
+    <div class="sub-chip chip-flip">✦ Exam Fliq's</div>
     <h1 class="sub-title">Choose your level</h1>
     <div class="level-grid">
-      <a class="level-card" href="https://docs.google.com/forms/d/e/1FAIpQLSeWknXF9rEO4lvECqOJXn4V1J4N4TgrD8Vj1O1KUPu6X7V8SA/viewform?usp=header" style="--lc:#60a5fa;">
+      <!-- Level 7 — AKTIF -->
+      <a class="level-card" href="https://darurat-lms-lvl-7.vercel.app/" style="--lc:#4ade80;">
         <div class="lv-num">7</div>
         <div class="lv-word">Level</div>
         <div class="lv-open">Open →</div>
       </a>
-      <a class="level-card" href="https://docs.google.com/forms/d/e/1FAIpQLSelwplm6ZUgffDsJY_impB4w_Z9z6sV3rWu1hDlncnzYeUznw/viewform?usp=header" style="--lc:#38bdf8;">
+      <!-- Level 8 — menyusul -->
+      <div class="level-card disabled" style="--lc:#a3e635;">
         <div class="lv-num">8</div>
         <div class="lv-word">Level</div>
-        <div class="lv-open">Open →</div>
-      </a>
-      <a class="level-card" href="https://docs.google.com/forms/d/e/1FAIpQLSdWEAjuUU0aa088Sx3kZ7tqz7phhQ1y1Jx3qZccLnqFjBiyFQ/viewform?usp=header" style="--lc:#22d3ee;">
+        <div class="lv-soon">🔗 Menyusul</div>
+      </div>
+      <!-- Level 9 — menyusul -->
+      <div class="level-card disabled" style="--lc:#bef264;">
         <div class="lv-num">9</div>
         <div class="lv-word">Level</div>
-        <div class="lv-open">Open →</div>
-      </a>
+        <div class="lv-soon">🔗 Menyusul</div>
+      </div>
     </div>
-    <button class="back-btn" onclick="go('page-gender')">← Kembali ke Pilih Gender</button>
+    <button class="back-btn" onclick="go('page-main')">← Kembali ke Portal</button>
   </div>
 </div>
 
 <script>
+  const allPages = ['page-main','page-form-level','page-sorry','page-flip-level'];
+
   function go(id) {
-    ['page-main','page-gender','page-level-female','page-level-male'].forEach(pid => {
-      document.getElementById(pid).classList.remove('active');
-    });
+    allPages.forEach(pid => document.getElementById(pid).classList.remove('active'));
     const target = document.getElementById(id);
     target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    target.querySelectorAll('.sub-breadcrumb,.sub-icon,.sub-chip,.sub-title,.gender-grid,.level-grid,.back-btn').forEach(el => {
+    target.querySelectorAll('.sub-breadcrumb,.sub-icon,.sub-chip,.sub-title,.sub-desc,.sorry-icon,.sorry-title,.sorry-desc,.gender-grid,.level-grid,.back-btn').forEach(el => {
       el.style.animation = 'none';
       el.offsetHeight;
       el.style.animation = '';
